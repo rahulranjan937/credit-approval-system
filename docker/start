@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+
+python manage.py migrate
+# Sleep for 5 seconds to wait for the database to start
+sleep 3
+python manage.py ingest_data
+
+sleep 2
+exec uvicorn credit_approval_system.asgi:application --host 0.0.0.0
